@@ -1,0 +1,113 @@
+---
+kind: pipeline
+type: kubernetes
+name: OpsData-golang-amd64
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+
+  - name: Docker-Build-DryRun
+    image: plugins/docker
+    settings:
+      purge: false
+      registry: a1-harbor.support.tools
+      repo: a1-harbor.support.tools/opsdata/golang
+      dockerfile: ./Dockerfile
+      dry_run: true
+      context: ./
+      tags:
+        - ${DRONE_BUILD_NUMBER}
+        - ${DRONE_COMMIT_BRANCH}
+        - latest
+
+  - name: Docker-Build-Publish
+    image: plugins/docker
+    settings:
+      purge: false
+      registry: a1-harbor.support.tools
+      repo: a1-harbor.support.tools/opsdata/golang
+      dockerfile: ./Dockerfile
+      dry_run: false
+      context: ./
+      tags:
+        - ${DRONE_BUILD_NUMBER}
+        - ${DRONE_COMMIT_BRANCH}
+        - latest
+      cache_from: "a1-harbor.support.tools/opsdata/golang:latest"
+      username:
+        from_secret: harbor-username
+      password:
+        from_secret: harbor-password
+    when:
+     event:
+     - deployment
+     - promote
+     target:
+     - production
+
+node_selector:
+  beta.kubernetes.io/arch: amd64
+  drone-runner: true
+
+image_pull_secrets:
+- regcreds
+
+---
+kind: pipeline
+type: kubernetes
+name: OpsData-golang-arm64
+
+platform:
+  os: linux
+  arch: arm64
+
+steps:
+
+  - name: Docker-Build-DryRun
+    image: plugins/docker
+    settings:
+      purge: false
+      registry: a1-harbor.support.tools
+      repo: a1-harbor.support.tools/opsdata/golang
+      dockerfile: ./Dockerfile
+      dry_run: true
+      context: ./
+      tags:
+        - ${DRONE_BUILD_NUMBER}
+        - ${DRONE_COMMIT_BRANCH}
+        - latest
+
+  - name: Docker-Build-Publish
+    image: plugins/docker
+    settings:
+      purge: false
+      registry: a1-harbor.support.tools
+      repo: a1-harbor.support.tools/opsdata/golang
+      dockerfile: ./Dockerfile
+      dry_run: false
+      context: ./
+      tags:
+        - ${DRONE_BUILD_NUMBER}
+        - ${DRONE_COMMIT_BRANCH}
+        - latest
+      cache_from: "a1-harbor.support.tools/opsdata/golang:latest"
+      username:
+        from_secret: harbor-username
+      password:
+        from_secret: harbor-password
+    when:
+     event:
+     - deployment
+     - promote
+     target:
+     - production
+
+node_selector:
+  beta.kubernetes.io/arch: arm64
+  drone-runner: true
+
+image_pull_secrets:
+- regcreds
