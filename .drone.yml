@@ -69,6 +69,7 @@ steps:
   - name: Docker-Build-DryRun
     image: plugins/docker
     settings:
+      custom_dns: [ 1.1.1.1, 1.0.0.1 ]
       purge: false
       registry: a1-harbor.support.tools
       repo: a1-harbor.support.tools/opsdata/golang
@@ -83,6 +84,7 @@ steps:
   - name: Docker-Build-Publish
     image: plugins/docker
     settings:
+      custom_dns: [ 1.1.1.1, 1.0.0.1 ]
       purge: false
       registry: a1-harbor.support.tools
       repo: a1-harbor.support.tools/opsdata/golang
