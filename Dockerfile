@@ -1,7 +1,6 @@
 FROM golang:1.16.3-alpine3.13
 
-RUN apk add -q --update && \
-  apk add -q \
+RUN apk add -q \
   bash \
   git \
   curl \
