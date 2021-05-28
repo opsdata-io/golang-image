@@ -23,7 +23,7 @@ steps:
         - ${DRONE_COMMIT_BRANCH}
         - latest
 
-  - name: Docker-Build-Publish
+  - name: Docker-Build-Publish-to-Harbor
     image: plugins/docker
     settings:
       purge: false
@@ -41,6 +41,32 @@ steps:
         from_secret: harbor-username
       password:
         from_secret: harbor-password
+    when:
+     event:
+     - deployment
+     - promote
+     target:
+     - production
+
+  - name: Docker-Build-Publish-to-DockerHub
+    image: plugins/docker
+    settings:
+      custom_dns: [ 1.1.1.1, 1.0.0.1 ]
+      purge: false
+      registry: docker.io
+      repo: docker.io/cube8021/golang
+      dockerfile: ./Dockerfile
+      dry_run: false
+      context: ./
+      tags:
+        - ${DRONE_BUILD_NUMBER}
+        - ${DRONE_COMMIT_BRANCH}
+        - latest
+      cache_from: "a1-harbor.support.tools/opsdata/golang:latest"
+      username:
+        from_secret: docker-username
+      password:
+        from_secret: docker-password
     when:
      event:
      - deployment
@@ -81,7 +107,7 @@ steps:
         - ${DRONE_COMMIT_BRANCH}
         - latest
 
-  - name: Docker-Build-Publish
+  - name: Docker-Build-Publish-to-Harbor
     image: plugins/docker
     settings:
       custom_dns: [ 1.1.1.1, 1.0.0.1 ]
@@ -100,6 +126,32 @@ steps:
         from_secret: harbor-username
       password:
         from_secret: harbor-password
+    when:
+     event:
+     - deployment
+     - promote
+     target:
+     - production
+
+  - name: Docker-Build-Publish-to-DockerHub
+    image: plugins/docker
+    settings:
+      custom_dns: [ 1.1.1.1, 1.0.0.1 ]
+      purge: false
+      registry: docker.io
+      repo: docker.io/cube8021/golang
+      dockerfile: ./Dockerfile
+      dry_run: false
+      context: ./
+      tags:
+        - ${DRONE_BUILD_NUMBER}
+        - ${DRONE_COMMIT_BRANCH}
+        - latest
+      cache_from: "a1-harbor.support.tools/opsdata/golang:latest"
+      username:
+        from_secret: docker-username
+      password:
+        from_secret: docker-password
     when:
      event:
      - deployment
